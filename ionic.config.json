@@ -1,4 +1,14 @@
 {
   "name": "chationic",
-  "app_id": ""
+  "app_id": "",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "scss/**/*",
+    "www/js/*",
+    "www/css/**/*",
+    "www/templates/**/*"
+  ]
 }
