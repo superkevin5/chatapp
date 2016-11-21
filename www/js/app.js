@@ -5,9 +5,16 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ui.router','ngCookies'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $state) {
+
+
+  $rootScope.$on('session:destroy', function (event, args) {
+    $state.go('login', { message: args.message });
+  });
+
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -22,7 +29,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   });
 })
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
+  // Code for UI-Router have been removed for brevity
+
+  // Inject APIInterceptor factory
+  $httpProvider.interceptors.push('APIInterceptor');
+
+})
 .config(function($stateProvider, $urlRouterProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
@@ -30,15 +44,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
+  // setup an abstract state for the tabs directive
 
   // setup an abstract state for the tabs directive
+    .state('login', {
+      url: '/login',
+      abstract: false,
+      controller: 'LoginCtrl',
+      templateUrl: 'templates/login.html'
+    })
+    // Each tab has its own nav history stack:
     .state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
   })
-
-  // Each tab has its own nav history stack:
 
   .state('tab.dash', {
     url: '/dash',
@@ -49,7 +69,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
-
+  .state('tab.photos', {
+    cache: false,
+    url: '/photos',
+    views: {
+      'tab-photos': {
+        templateUrl: 'templates/tab-photos.html',
+        controller: 'PhotosCtrl'
+      }
+    }
+  })
   .state('tab.chats', {
       url: '/chats',
       views: {
@@ -80,6 +109,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
-
+  $urlRouterProvider.otherwise('/login');
 });
+
+window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '134731240339362',
+    xfbml      : true,
+    version    : 'v2.8'
+  });
+  FB.AppEvents.logPageView();
+};
+
+(function(d, s, id){
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));

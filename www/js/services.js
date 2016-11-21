@@ -1,6 +1,30 @@
 angular.module('starter.services', [])
+  .factory('Sessions', function($rootScope, cookieStore, COOKIE_DOMAINS) {
 
-.factory('Chats', function() {
+    var SessionAPI = {
+
+      get: function (key) {
+        return cookieStore.get(key);
+      },
+      remove: function(key) {
+        cookieStore.remove(key, { path : '/', domain : COOKIE_DOMAINS });
+      },
+
+      // other methods have been removed for brevity
+
+      destroy: function (message) {
+        user = {};
+        this.remove('id');
+        this.remove('token');
+        this.remove('expiresAt');
+        this.remove('role');
+        this.remove('authType');
+        $rootScope.$emit('session:destroy', { message: message });
+      }
+    };
+    return SessionAPI;
+  })
+  .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
