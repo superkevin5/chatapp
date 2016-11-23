@@ -49,7 +49,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // setup an abstract state for the tabs directive
     .state('login', {
       url: '/login',
-      abstract: false,
+      cache: false,
       controller: 'LoginCtrl',
       templateUrl: 'templates/login.html'
     })
@@ -115,6 +115,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 window.fbAsyncInit = function() {
   FB.init({
     appId      : '134731240339362',
+    cookie     : false,
+    status     : true,
     xfbml      : true,
     version    : 'v2.8'
   });

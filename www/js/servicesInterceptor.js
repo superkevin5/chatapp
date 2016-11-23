@@ -25,7 +25,7 @@ angular.module('starter.services', [])
       },
 
       // On response failture
-      responseError: function(rejection) {
+      responseError: function(rejection,$cookies) {
 
         // This will capture all HTTP errors such as 401 errors so be careful with your code. You can however
         // examine the "rejection" object so you can add more filtering
@@ -35,7 +35,7 @@ angular.module('starter.services', [])
           Session.destroy('Your token has expired!'); // See Session factory below
         }
 
-
+        $cookies.remove('accessToken');
         // Return the promise rejection.
         return $q.reject(rejection);
       }
